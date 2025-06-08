@@ -1,4 +1,6 @@
 import { Outlet, useNavigation } from "react-router";
+import Loader from "./Loader";
+import Header from "./Header";
 
 function AppLayout() {
   const navigation = useNavigation();

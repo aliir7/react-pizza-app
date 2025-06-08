@@ -1,3 +1,6 @@
+import AppLayout from "./components/ui/AppLayout";
+import Error from "./components/ui/Error";
+import Home from "./components/ui/Home";
 import "./index.css";
 
 import { createBrowserRouter, RouterProvider } from "react-router";
