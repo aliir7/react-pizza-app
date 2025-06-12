@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 import useUserStore from "../../../store/useUserStore";
-import React, { useState } from "react";
+import { useState } from "react";
 import Button from "../../ui/Button";
 
 function CreateUser() {
@@ -8,16 +8,19 @@ function CreateUser() {
   const [username, setUsername] = useState<string>("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!username || username.trim() === "") return;
+    if (!username) {
+      return;
+    }
+
     updateName(username);
     navigate("/menu");
   };
 
   return (
-    <form onSubmit={() => handleSubmit}>
+    <form onSubmit={handleSubmit}>
       <p className="mb-4 text-sm text-stone-600 md:text-base">
         👋 Welcome! Please start by telling us your name:
       </p>

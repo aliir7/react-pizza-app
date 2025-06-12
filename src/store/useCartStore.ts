@@ -4,27 +4,39 @@ import type { CartItem } from "../types";
 type cartState = {
   cart: CartItem[];
   addItem: (newItem: CartItem) => void;
-  deleteItem: (id: string) => void;
-  increaseItemQuantity: (id: string) => void;
-  decreaseItemQuantity: (id: string) => void;
+  deleteItem: (id: number) => void;
+  increaseItemQuantity: (id: number) => void;
+  decreaseItemQuantity: (id: number) => void;
+  getCart: () => CartItem[];
+  getTotalCartQuantity: () => number;
+  getCurrentQuantityById: (id: number) => number;
+  getTotalCartPrice: () => number;
   clearCart: () => void;
 };
 
-const useCartStore = create<cartState>((set) => ({
+const useCartStore = create<cartState>((set, get) => ({
   cart: [],
   addItem: (newItem) =>
     set((state) => {
-      const existingItem = state.cart.find(
+      const exists = state.cart.some(
         (item) => item.pizzaId === newItem.pizzaId
       );
-      if (existingItem) {
-        existingItem.quantity += newItem.quantity;
-        existingItem.totalPrice =
-          existingItem.unitPrice * existingItem.quantity;
+      if (exists) {
+        return {
+          cart: state.cart.map((item) =>
+            item.pizzaId === newItem.pizzaId
+              ? {
+                  ...item,
+                  quantity: item.quantity + newItem.quantity,
+                  totalPrice:
+                    (item.quantity + newItem.quantity) * item.unitPrice,
+                }
+              : item
+          ),
+        };
       } else {
         return { cart: [...state.cart, newItem] };
       }
-      return { cart: [...state.cart] };
     }),
 
   deleteItem: (id) =>
@@ -57,6 +69,19 @@ const useCartStore = create<cartState>((set) => ({
       }
       return { cart: [...state.cart] };
     }),
+  getCart: () => {
+    return get().cart;
+  },
+  getTotalCartQuantity: () => {
+    return get().cart.reduce((sum, item) => sum + item.quantity, 0);
+  },
+  getTotalCartPrice: () => {
+    return get().cart.reduce((sum, item) => sum + item.totalPrice, 0);
+  },
+  getCurrentQuantityById: (id) => {
+    const item = get().cart.find((item) => item.pizzaId === id);
+    return item ? item.quantity : 0;
+  },
   clearCart: () => set({ cart: [] }),
 }));
 

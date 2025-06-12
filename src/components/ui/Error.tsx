@@ -1,6 +1,5 @@
 import { useRouteError, isRouteErrorResponse } from "react-router";
-
-import Button from "./Button";
+import LinkButton from "./LinkButton";
 
 function Error() {
   const error = useRouteError();
@@ -22,9 +21,7 @@ function Error() {
     <div>
       <h1>Something went wrong 😢</h1>
       <p>{errorMessage}</p>
-      <Button to="-1" type="secondary">
-        &larr; Go back
-      </Button>
+      <LinkButton to="-1">&larr; Go back</LinkButton>
     </div>
   );
 }
