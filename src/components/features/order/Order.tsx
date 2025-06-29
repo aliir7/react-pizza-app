@@ -1,7 +1,4 @@
-import { useEffect } from "react";
-import { useFetcher, useLoaderData } from "react-router";
-
-import type { CartItem, Order } from "../../../types";
+import type { CartItem, Order as OrderType } from "../../../types";
 import {
   calcMinutesLeft,
   formatCurrency,
@@ -10,20 +7,16 @@ import {
 import OrderItem from "./OrderItem";
 import UpdateOrder from "./UpdateOrder";
 import { getOrder } from "../../../services/apiRestaurant";
+import { useLoader } from "@tanstack/react-router";
+
+export const OrderRoute = {
+  loader: async ({ params }: { params: { orderId: string } }) => {
+    return await getOrder(params.orderId);
+  },
+};
 
 function Order() {
-  const order = useLoaderData();
-
-  // use fetcher from react router
-  const fetcher = useFetcher();
-
-  useEffect(
-    function () {
-      if (!fetcher.data && fetcher.state === "idle") fetcher.load("/menu");
-    },
-    [fetcher]
-  );
-
+  const order = useLoader<OrderType>();
   // Everyone can search for all orders, so for privacy reasons we're gonna gonna exclude names or address, these are only for the restaurant staff
   const {
     id,

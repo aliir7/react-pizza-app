@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link } from "@tanstack/react-router";
 import useCartStore from "../../../store/useCartStore";
 import { formatCurrency } from "../../../utils/helpers";
 

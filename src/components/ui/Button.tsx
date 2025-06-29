@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link } from "@tanstack/react-router";
 
 type ButtonProps = {
   children?: React.ReactNode;

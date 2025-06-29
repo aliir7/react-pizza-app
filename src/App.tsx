@@ -1,53 +1,43 @@
-import Cart from "./components/features/cart/Cart";
-import Menu, { loader as menuLoader } from "./components/features/menu/Menu";
-import { loader as orderLoader } from "./components/features/order/Order";
+import { createRouter, RouterProvider } from "@tanstack/react-router";
+import { routeTree } from "./routeTree.gen";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Toaster } from "react-hot-toast";
 
-import CreateOrder, {
-  action as createOrderAction,
-} from "./components/features/order/CreateOrder";
+const router = createRouter({
+  routeTree,
+  context: { isLoading: false },
+  defaultPreload: "intent",
+});
 
-import { action as updateOrderAction } from "./components/features/order/UpdateOrder";
-import Order from "./components/features/order/Order";
-import AppLayout from "./components/ui/AppLayout";
-import Error from "./components/ui/Error";
-import Home from "./components/ui/Home";
-import "./index.css";
+declare module "@tanstack/react-router" {
+  interface Register {
+    router: typeof router;
+  }
+}
+const queryClient = new QueryClient();
 
-import { createBrowserRouter, RouterProvider } from "react-router";
-
-const router = createBrowserRouter([
-  {
-    element: <AppLayout />,
-    errorElement: <Error />,
-    children: [
-      {
-        path: "/",
-        element: <Home />,
-      },
-      {
-        path: "/menu",
-        element: <Menu />,
-        loader: menuLoader,
-        errorElement: <Error />,
-      },
-      { path: "/cart", element: <Cart /> },
-      {
-        path: "/order/new",
-        element: <CreateOrder />,
-        action: createOrderAction,
-      },
-      {
-        path: "/order/:orderId",
-        element: <Order />,
-        loader: orderLoader,
-        errorElement: <Error />,
-        action: updateOrderAction,
-      },
-    ],
-  },
-]);
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />;
+      <Toaster
+        position="bottom-left"
+        gutter={12}
+        containerStyle={{ margin: "8px" }}
+        toastOptions={{
+          success: { duration: 3000 },
+          error: { duration: 3000 },
+          style: {
+            fontSize: "16px",
+            maxWidth: "500px",
+            padding: "16px 24px",
+            backgroundColor: "yellow",
+            color: "GrayText",
+          },
+        }}
+      />
+    </QueryClientProvider>
+  );
 }
 
 export default App;
